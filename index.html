@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Basic UI · Neubrutalist Cards</title>
+  <style>
+    /* ---------- RESET & GLOBAL (fresh basic style, different flavor) ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* 
+      This UI uses a light, 'neubrutalist' inspired simple style:
+      bold borders, subtle rounded corners, clean whitespace.
+      No gradients, minimal shadows — very basic but intentional.
+    */
+    :root {
+      --bg-page: #faf7f2;        /* warm paper-like background */
+      --surface-card: #ffffff;
+      --text-dark: #1e1e2a;
+      --text-mid: #4a4a5a;
+      --text-soft: #8a8a9a;
+      --border-heavy: #1e1e2a;
+      --accent-mint: #2d6a4f;
+      --accent-mint-light: #d8f3dc;
+      --accent-peach: #e9c46a;
+      --accent-peach-soft: #fff3cf;
+      --radius-default: 16px;
+      --radius-sm: 10px;
+      --shadow-card: 4px 4px 0px 0px #1e1e2a;
+      --transition-quick: all 0.15s ease;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-dark);
+      padding: 2rem 1.5rem;
+      line-height: 1.4;
+    }
+
+    /* main container: different spacing, centered, max-width */
+    .app-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ===== HEADER (simple, bold) ===== */
+    .basic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-heavy);
+    }
+    .logo-area {
+      font-weight: 800;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+      color: var(--text-dark);
+    }
+    .logo-area span {
+      background: var(--accent-mint);
+      color: white;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      margin-left: 0.3rem;
+    }
+    .header-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .icon-btn {
+      background: transparent;
+      border: 2px solid var(--border-heavy);
+      border-radius: 40px;
+      padding: 0.4rem 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition-quick);
+    }
+    .icon-btn:hover {
+      background: var(--text-dark);
+      color: white;
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 0 var(--border-heavy);
+    }
+
+    /* ===== HERO / GREETING (basic) ===== */
+    .greeting-card {
+      background: var(--surface-card);
+      border: 2px solid var(--border-heavy);
+      border-radius: var(--radius-default);
+      padding: 1.6rem 2rem;
+      box-shadow: var(--shadow-card);
+    }
+    .greeting-card h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .greeting-card p {
+      color: var(--text-mid);
+      font-size: 0.9rem;
+    }
+
+    /* ===== STATS ROW (simple metric bars) ===== */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    .stat-item {
+      background: white;
+      border: 2px solid var(--border-heavy);
+      border-radius: var(--radius-sm);
+      flex: 1;
+      min-width: 110px;
+      padding: 1rem 1rem;
+      text-align: center;
+      transition: var(--transition-quick);
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-mid);
+    }
+
+    /* ===== CARD GRID (different container: profile / info cards) ===== */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: inline-block;
+      border-left: 5px solid var(--accent-mint);
+      padding-left: 0.8rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.5rem;
+    }
+    .base-card {
+      background: var(--surface-card);
+      border: 2px solid var(--border-heavy);
+      border-radius: var(--radius-default);
+      padding: 1.2rem;
+      transition: var(--transition-quick);
+      box-shadow: 2px 2px 0 0 rgba(0,0,0,0.05);
+    }
+    .base-card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 6px 6px 0 0 var(--border-heavy);
+    }
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.7rem;
+    }
+    .card-title {
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      margin-bottom: 1rem;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--accent-mint-light);
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-mint);
+    }
+
+    /* ===== TWO COLUMN (profile + notifications area) ===== */
+    .split-layout {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .profile-card {
+      flex: 1.2;
+      background: white;
+      border: 2px solid var(--border-heavy);
+      border-radius: var(--radius-default);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .notif-card {
+      flex: 2;
+      background: white;
+      border: 2px solid var(--border-heavy);
+      border-radius: var(--radius-default);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .avatar-big {
+      width: 70px;
+      height: 70px;
+      background: var(--accent-peach-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      border: 2px solid var(--border-heavy);
+      margin-bottom: 0.8rem;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.8rem 0;
+      font-size: 0.85rem;
+      border-bottom: 1px dashed #ddd;
+      padding-bottom: 0.5rem;
+    }
+    .info-label {
+      font-weight: 600;
+    }
+    .notif-item {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .notif-badge {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-mint);
+      border-radius: 50%;
+    }
+    .notif-text {
+      flex: 1;
+      font-size: 0.85rem;
+    }
+    .notif-time {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    /* simple form */
+    .mini-form {
+      margin-top: 1.2rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    input {
+      flex: 1;
+      padding: 0.7rem;
+      border: 2px solid var(--border-heavy);
+      border-radius: 12px;
+      font-family: inherit;
+      background: white;
+    }
+    button.primary-btn {
+      background: var(--accent-mint);
+      border: 2px solid var(--border-heavy);
+      padding: 0 1.2rem;
+      border-radius: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-quick);
+      color: white;
+    }
+    button.primary-btn:hover {
+      background: #1b4d3e;
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 0 var(--border-heavy);
+    }
+    .outline-small {
+      background: transparent;
+      border: 2px solid var(--border-heavy);
+      border-radius: 40px;
+      padding: 0.3rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* footer */
+    .footer-note {
+      margin-top: 1rem;
+      text-align: center;
+      border-top: 2px solid var(--border-heavy);
+      padding-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    /* responsive */
+    @media (max-width: 680px) {
+      body {
+        padding: 1rem;
+      }
+      .stat-number {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- header different style -->
+  <div class="basic-header">
+    <div class="logo-area">Basic<span>UI</span></div>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeNoteBtn">🎨 vibe</button>
+      <button class="icon-btn" id="helpBtn">?</button>
+    </div>
+  </div>
+
+  <!-- greeting / banner area -->
+  <div class="greeting-card">
+    <h1>Simple & sturdy interface</h1>
+    <p>Another basic UI container — built with bold borders, pure HTML/CSS and minimal interactions.</p>
+  </div>
+
+  <!-- basic stats row (different metric container) -->
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-number">24</div><div class="stat-label">projects</div></div>
+    <div class="stat-item"><div class="stat-number">146</div><div class="stat-label">tasks</div></div>
+    <div class="stat-item"><div class="stat-number">89%</div><div class="stat-label">efficiency</div></div>
+    <div class="stat-item"><div class="stat-number">12</div><div class="stat-label">members</div></div>
+  </div>
+
+  <!-- Card grid section (feature cards) -->
+  <div>
+    <div class="section-title">Core modules</div>
+    <div class="card-grid" id="featureGrid">
+      <div class="base-card">
+        <div class="card-icon">📦</div>
+        <div class="card-title">Containers</div>
+        <div class="card-desc">Flexible card layout, grid system and side panels.</div>
+        <span class="tag">basic</span>
+      </div>
+      <div class="base-card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Interactions</div>
+        <div class="card-desc">Hover states, click feedback & toast notifications.</div>
+        <span class="tag">live</span>
+      </div>
+      <div class="base-card">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">Palette</div>
+        <div class="card-desc">Mint + peach accents on neutral background.</div>
+        <span class="tag">fresh</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- split layout: profile + notifications (alternative containers) -->
+  <div class="split-layout">
+    <!-- left: profile card (different info) -->
+    <div class="profile-card">
+      <div class="avatar-big">👩‍💻</div>
+      <h3 style="margin-bottom: 0.2rem;">Taylor Chen</h3>
+      <p style="font-size: 0.8rem; color: var(--text-mid); margin-bottom: 1rem;">Product designer</p>
+      <div class="info-row"><span class="info-label">Location</span><span>Brooklyn, NY</span></div>
+      <div class="info-row"><span class="info-label">Joined</span><span>May 2025</span></div>
+      <div class="info-row"><span class="info-label">Focus</span><span>UI Systems</span></div>
+      <button class="outline-small" id="profileBtn" style="margin-top: 1rem; width: 100%;">View profile →</button>
+    </div>
+
+    <!-- right: notification area + mini message form (another container) -->
+    <div class="notif-card">
+      <h3 style="margin-bottom: 1rem;">🔔 Recent activity</h3>
+      <div id="notifList">
+        <div class="notif-item"><div class="notif-badge"></div><div class="notif-text">Kai commented on your draft</div><div class="notif-time">15 min ago</div></div>
+        <div class="notif-item"><div class="notif-badge"></div><div class="notif-text">Project "Baseline" updated</div><div class="notif-time">2h ago</div></div>
+        <div class="notif-item"><div class="notif-badge"></div><div class="notif-text">You have a new task assignment</div><div class="notif-time">yesterday</div></div>
+      </div>
+      <div class="mini-form">
+        <div class="info-label" style="margin-bottom: 0.3rem;">Quick message</div>
+        <div class="input-group">
+          <input type="text" id="quickMsgInput" placeholder="type something...">
+          <button id="sendMsgBtn" class="primary-btn">Send</button>
+        </div>
+        <div id="msgFeedback" style="font-size: 0.7rem; margin-top: 0.5rem; color: var(--accent-mint);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- extra simple list / footer link container -->
+  <div style="background: white; border: 2px solid var(--border-heavy); border-radius: var(--radius-default); padding: 1rem 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;">
+    <span style="font-weight: 500;">📎 Resources</span>
+    <div style="display: flex; gap: 1.2rem;">
+      <a href="#" id="docsLink" style="text-decoration: none; color: var(--text-mid);">Docs</a>
+      <a href="#" id="guideLink" style="text-decoration: none; color: var(--text-mid);">Guide</a>
+      <a href="#" id="githubMock" style="text-decoration: none; color: var(--text-mid);">GitHub</a>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <p>Basic UI — third layout variant • simple containers and clean borders</p>
+  </div>
+</div>
+
+<!-- minimal vanilla JS to show basic interactivity (lightweight) -->
+<script>
+  (function() {
+    // toast helper
+    function showFloatyMessage(text, duration = 2000) {
+      let toast = document.createElement('div');
+      toast.innerText = text;
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.backgroundColor = '#1e1e2a';
+      toast.style.color = 'white';
+      toast.style.padding = '8px 18px';
+      toast.style.borderRadius = '40px';
+      toast.style.fontSize = '0.8rem';
+      toast.style.fontWeight = '500';
+      toast.style.border = '1px solid white';
+      toast.style.zIndex = '999';
+      toast.style.pointerEvents = 'none';
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        if (toast) toast.remove();
+      }, duration);
+    }
+
+    // header buttons
+    const themeBtn = document.getElementById('themeNoteBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        showFloatyMessage('🎨 This is a basic neubrutalist style — try hovering cards!');
+      });
+    }
+    const helpBtn = document.getElementById('helpBtn');
+    if (helpBtn) {
+      helpBtn.addEventListener('click', () => {
+        showFloatyMessage('❓ Built with simple containers, bold borders, and minimal JS.');
+      });
+    }
+
+    // profile card button
+    const profileBtn = document.getElementById('profileBtn');
+    if (profileBtn) {
+      profileBtn.addEventListener('click', () => {
+        showFloatyMessage('👤 Profile page demo (UI ready for routing)');
+      });
+    }
+
+    // message sender logic
+    const sendBtn = document.getElementById('sendMsgBtn');
+    const msgInput = document.getElementById('quickMsgInput');
+    const msgFeedback = document.getElementById('msgFeedback');
+    if (sendBtn && msgInput) {
+      sendBtn.addEventListener('click', () => {
+        const val = msgInput.value.trim();
+        if (val === "") {
+          if (msgFeedback) msgFeedback.innerText = '✏️ Write a message first.';
+          setTimeout(() => { if(msgFeedback) msgFeedback.innerText = ''; }, 1500);
+          return;
+        }
+        // add new notif to the list dynamically to show container update
+        const notifContainer = document.getElementById('notifList');
+        if (notifContainer) {
+          const newNotif = document.createElement('div');
+          newNotif.className = 'notif-item';
+          newNotif.innerHTML = `<div class="notif-badge"></div><div class="notif-text">You: "${val.substring(0, 35)}"</div><div class="notif-time">just now</div>`;
+          notifContainer.prepend(newNotif);
+          if (msgFeedback) msgFeedback.innerText = '✓ Message added to activity';
+          setTimeout(() => { if(msgFeedback) msgFeedback.innerText = ''; }, 1800);
+        }
+        msgInput.value = '';
+        showFloatyMessage('💬 Message sent!');
+      });
+    }
+
+    // all resource links demo
+    const docs = document.getElementById('docsLink');
+    const guide = document.getElementById('guideLink');
+    const github = document.getElementById('githubMock');
+    const handleLink = (e, name) => {
+      e.preventDefault();
+      showFloatyMessage(`📁 Navigation demo: ${name} section (basic UI container)`);
+    };
+    if (docs) docs.addEventListener('click', (e) => handleLink(e, 'Docs'));
+    if (guide) guide.addEventListener('click', (e) => handleLink(e, 'Guide'));
+    if (github) github.addEventListener('click', (e) => handleLink(e, 'GitHub'));
+
+    // add hover effect console note not needed, but interactive cards: add click demo for feature cards
+    const cards = document.querySelectorAll('.base-card');
+    cards.forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        const title = card.querySelector('.card-title')?.innerText || 'card';
+        showFloatyMessage(`📌 "${title}" — container demo (basic UI)`);
+      });
+    });
+
+    // stat items click just for demo
+    const statItems = document.querySelectorAll('.stat-item');
+    statItems.forEach((stat, i) => {
+      stat.addEventListener('click', () => {
+        const num = stat.querySelector('.stat-number')?.innerText;
+        showFloatyMessage(`📊 Stat: ${num} (basic metric)`);
+      });
+    });
+
+    console.log('Basic UI · third variant ready — containers with bold borders');
+  })();
+</script>
+</body>
+</html>
