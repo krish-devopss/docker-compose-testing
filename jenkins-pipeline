@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    triggers {
+        githubPush()
+    }
+        
+    stages {
+        stage('Code') {
+            steps {
+                git 'https://github.com/krish-devopss/docker-compose-testing.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
+            }
+        }
+    }
+}
