@@ -1,0 +1,34 @@
+services:
+  amazon:
+    container_name: amazon_cont
+    build: ./amazon
+    ports:
+      - "1111:80"
+    networks:
+      - amazon_network
+
+  azure:
+    container_name: azure_cont
+    build: ./azure
+    ports:
+      - "2222:80"
+    networks:
+      - azure_network
+      - gcp_network
+
+  gcp:
+    container_name: gcp_cont
+    build: ./gcp
+    ports:
+      - "3333:80"
+    networks:
+      - gcp_network
+      - azure_network
+
+networks:
+  amazon_network:
+    driver: bridge
+  azure_network:
+    driver: bridge
+  gcp_network:
+    driver: bridge
